@@ -11,11 +11,15 @@ public class Percolation {
     public Percolation(int n) {
         this.size = n;
         unions = new WeightedQuickUnionUF(n * n + 2);
+        for (int i = 1; i < size; i++) {
+            unions.union(0, i);
+            unions.union(n * n + 1, n * n + 1 - i);
+        }
         grid = new boolean[n][n];
     }
 
     public boolean percolates() {
-        if (unions.connected(0, (size * size))) {
+        if (unions.connected(0, 101)) {
             return true;
         }
         return false;
@@ -52,22 +56,22 @@ public class Percolation {
     }
 
     private void connect(int row, int col) {
-        int tile = size * row + col;
+        int tile = size * row + col + 1;
         StdOut.print(tile);
         if (row != 0 && isOpen(row - 1, col)) {
-            unions.union((size * (row - 1) + col), tile);
+            unions.union(((size * (row - 1) + col) + 1), tile);
             StdOut.print("down\n");
         }
         if (row != (size - 1) && isOpen(row + 1, col)) {
-            unions.union(tile, (size * (row + 1) + col));
+            unions.union(tile, ((size * (row + 1) + col) + 1));
             StdOut.print("up" + (size * row + 1 + col) + "\n");
         }
         if (col != 0 && isOpen(row, col - 1)) {
-            unions.union((size * row + col - 1), tile);
+            unions.union((size * row + col), tile);
             StdOut.print("left\n");
         }
         if (col != (size - 1) && isOpen(row, col + 1)) {
-            unions.union(tile, (size * row + col + 1));
+            unions.union(tile, ((size * row + col + 2)));
             StdOut.print("right: " + (size * row + col + 1) + "\n");
         }
     }
@@ -78,4 +82,3 @@ public class Percolation {
     }
 }
 ;
-
