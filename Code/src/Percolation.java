@@ -2,7 +2,7 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    private boolean[][] coloms;
+    private boolean[][] grid;
     private int open_count = 0;
     private int size;
     WeightedQuickUnionUF unions;
@@ -11,12 +11,11 @@ public class Percolation {
     public Percolation(int n) {
         this.size = n;
         unions = new WeightedQuickUnionUF(n * n + 2);
-        coloms = new boolean[n][n];
+        grid = new boolean[n][n];
     }
 
     public boolean percolates() {
-        if (unions.connected(1, 91)) {
-            StdOut.print("yes");
+        if (unions.connected(0, (size * size))) {
             return true;
         }
         return false;
@@ -26,17 +25,11 @@ public class Percolation {
         if (isOpen(row, col)) {
             return;
         }
-        ;
-        try {
-            boundaries(row - 1, col - 1);
-
-        } catch (java.lang.IndexOutOfBoundsException e) {
-            StdOut.printf("out");
-            return;
-        }
-        StdOut.print(coloms[row - 1][col - 1]);
+        StdOut.print(row);
+        StdOut.print(" " + col + "\n");
         open_count++;
-        coloms[row - 1][col - 1] = true;
+        grid[row][col] = true;
+        connect(row, col);
     }
 
     public String numberOfOpenSites() {
@@ -45,12 +38,7 @@ public class Percolation {
     }
 
     public boolean isOpen(int row, int col) {
-        try {
-            boundaries(row - 1, col - 1);
-        } catch (java.lang.IndexOutOfBoundsException e) {
-            return false;
-        }
-        return coloms[row - 1][col - 1];
+        return grid[row][col];
     }
 
     public boolean isFull(int row, int col) {
@@ -63,7 +51,31 @@ public class Percolation {
         }
     }
 
+    private void connect(int row, int col) {
+        int tile = size * row + col;
+        StdOut.print(tile);
+        if (row != 0 && isOpen(row - 1, col)) {
+            unions.union((size * (row - 1) + col), tile);
+            StdOut.print("down\n");
+        }
+        if (row != (size - 1) && isOpen(row + 1, col)) {
+            unions.union(tile, (size * (row + 1) + col));
+            StdOut.print("up" + (size * row + 1 + col) + "\n");
+        }
+        if (col != 0 && isOpen(row, col - 1)) {
+            unions.union((size * row + col - 1), tile);
+            StdOut.print("left\n");
+        }
+        if (col != (size - 1) && isOpen(row, col + 1)) {
+            unions.union(tile, (size * row + col + 1));
+            StdOut.print("right: " + (size * row + col + 1) + "\n");
+        }
+    }
+
+
     public static void main(String[] args) {
 
     }
 }
+;
+
