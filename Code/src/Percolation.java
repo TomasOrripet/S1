@@ -11,7 +11,7 @@ public class Percolation {
     public Percolation(int n) {
         this.size = n;
         unions = new WeightedQuickUnionUF(n * n + 2);
-        for (int i = 1; i < size; i++) {
+        for (int i = 1; i <= size; i++) {
             unions.union(0, i);
             unions.union(n * n + 1, n * n + 1 - i);
         }
@@ -46,6 +46,10 @@ public class Percolation {
     }
 
     public boolean isFull(int row, int col) {
+        int tile = size * row + col + 1;
+        if (isOpen(row, col) && unions.connected(0, tile)) {
+            return true;
+        }
         return false;
     }
 
