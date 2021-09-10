@@ -1,15 +1,16 @@
-import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+import edu.princeton.cs.algs4.QuickFindUF;
+import edu.princeton.cs.algs4.StdRandom;
 
 public class Percolation {
     private boolean[][] grid;
     private int open_count = 0;
     private int size;
-    WeightedQuickUnionUF unions;
-
+    //WeightedQuickUnionUF unions;
+    QuickFindUF unions;
 
     public Percolation(int n) {
         this.size = n;
-        unions = new WeightedQuickUnionUF(n * n + 2);
+        unions = new QuickFindUF(n * n + 2);
         for (int i = 1; i <= size; i++) {
             unions.union(0, i);
             unions.union(n * n + 1, n * n + 1 - i);
@@ -44,7 +45,7 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        if (unions.connected(0, 101)) {
+        if (unions.connected(0, size * size)) {
             return true;
         }
         return false;
@@ -52,6 +53,12 @@ public class Percolation {
 
     public static void main(String[] args) {
 
+        Percolation percolation = new Percolation(10);
+        do {
+            int row = StdRandom.uniform(0, 10);
+            int col = StdRandom.uniform(0, 10);
+            percolation.open(row, col);
+        } while (!percolation.percolates());
     }
 
 
