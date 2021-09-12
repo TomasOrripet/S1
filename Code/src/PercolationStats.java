@@ -8,8 +8,14 @@ public class PercolationStats {
 
     public PercolationStats(int N, int T) // perform T independent experiments on an N-by-N grid
     {
+        if (N == 0 || T == 0) {
+            throw new java.lang.IllegalArgumentException("Index out of bounds");
+        }
         times = new double[T];
+        Stopwatch total = new Stopwatch();
+
         for (int i = 0; i < T; i++) {
+            //StdOut.print(i);
             Stopwatch timer = new Stopwatch();
             Percolation percolation = new Percolation(N);
             do {
@@ -19,8 +25,9 @@ public class PercolationStats {
             } while (!percolation.percolates());
             double time = timer.elapsedTime();
             times[i] = time;
-
         }
+        double totaltime = total.elapsedTime();
+        StdOut.print("Total time: " + totaltime + "\n");
         StdOut.print("mean: " + mean() + "\n");
         StdOut.print("Stddev: " + stddev() + "\n");
         StdOut.print("conf low: " + confidenceLow() + "\n");
@@ -49,6 +56,6 @@ public class PercolationStats {
     }
 
     public static void main(String[] args) {
-        new PercolationStats(1024, 10);
+        new PercolationStats(64, 256);
     }
 }
