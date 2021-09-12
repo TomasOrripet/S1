@@ -2,9 +2,9 @@ import edu.princeton.cs.algs4.QuickFindUF;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class Percolation {
-    private boolean[][] grid;
+    private final boolean[][] grid;
     private int open_count = 0;
-    private int size;
+    private final int size;
     //WeightedQuickUnionUF unions;
     QuickFindUF unions;
 
@@ -34,10 +34,7 @@ public class Percolation {
 
     public boolean isFull(int row, int col) {
         int tile = size * row + col + 1;
-        if (isOpen(row, col) && unions.connected(0, tile)) {
-            return true;
-        }
-        return false;
+        return isOpen(row, col) && unions.connected(0, tile);
     }
 
     public String numberOfOpenSites() {
@@ -45,18 +42,16 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        if (unions.connected(0, size * size)) {
-            return true;
-        }
-        return false;
+        return unions.connected(0, size * size);
     }
 
     public static void main(String[] args) {
-
-        Percolation percolation = new Percolation(10);
+        int n = 10;
+        if (args.length == 1) n = Integer.parseInt(args[0]);
+        Percolation percolation = new Percolation(n);
         do {
-            int row = StdRandom.uniform(0, 10);
-            int col = StdRandom.uniform(0, 10);
+            int row = StdRandom.uniform(0, n);
+            int col = StdRandom.uniform(0, n);
             percolation.open(row, col);
         } while (!percolation.percolates());
     }
@@ -83,7 +78,5 @@ public class Percolation {
             unions.union(tile, ((size * row + col + 2)));
         }
     }
-
-
 }
-;
+
